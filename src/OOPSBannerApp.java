@@ -1,40 +1,38 @@
+import java.util.HashMap;
+import java.util.Map;
+
 public class OOPSBannerApp {
-
-    // Static Inner Class for Encapsulation
+    
+    // Encapsulated Pattern Class
     static class CharacterPattern {
-        private final char character;
-        private final String[] pattern;
+        private final String[] rows;
+        public CharacterPattern(String[] rows) { this.rows = rows; }
+        public String getRow(int i) { return rows[i]; }
+    }
 
-        public CharacterPattern(char character, String[] pattern) {
-            this.character = character;
-            this.pattern = pattern;
-        }
+    // Centralized Registry using HashMap
+    private static final Map<Character, CharacterPattern> registry = new HashMap<>();
 
-        public String getRow(int row) {
-            return (row >= 0 && row < pattern.length) ? pattern[row] : "";
-        }
+    static {
+        registry.put('O', new CharacterPattern(new String[]{"  ***  ", " *   * ", "*     *", "*     *", "*     *", " *   * ", "  ***  "}));
+        registry.put('P', new CharacterPattern(new String[]{"*****  ", "*    * ", "*    * ", "*****  ", "*      ", "*      ", "*      "}));
+        registry.put('S', new CharacterPattern(new String[]{" ****  ", "*      ", "*      ", " ****  ", "     * ", "     * ", " ****  "}));
     }
 
     public static void main(String[] args) {
-        // Define Character Objects
-        CharacterPattern charO = new CharacterPattern('O', new String[]{
-            "  ***  ", " *   * ", "*     *", "*     *", "*     *", " *   * ", "  ***  "
-        });
-        CharacterPattern charP = new CharacterPattern('P', new String[]{
-            "*****  ", "*    * ", "*    * ", "*****  ", "*      ", "*      ", "*      "
-        });
-        CharacterPattern charS = new CharacterPattern('S', new String[]{
-            " ****  ", "*      ", "*      ", " ****  ", "     * ", "     * ", " ****  "
-        });
+        String target = "OOPS";
+        renderBanner(target);
+    }
 
-        // The "OOPS" word mapping
-        CharacterPattern[] word = { charO, charO, charP, charS };
-
-        // Render the banner line by line (7 rows)
+    private static void renderBanner(String input) {
+        // Outer loop for the 7 rows of the banner
         for (int i = 0; i < 7; i++) {
             StringBuilder sb = new StringBuilder();
-            for (CharacterPattern cp : word) {
-                sb.append(cp.getRow(i)).append("  "); // 2-space gap
+            // Inner loop to build the row character by character
+            for (char c : input.toUpperCase().toCharArray()) {
+                if (registry.containsKey(c)) {
+                    sb.append(registry.get(c).getRow(i)).append("  ");
+                }
             }
             System.out.println(sb.toString());
         }
